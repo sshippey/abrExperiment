@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # in=$2/out-$1-250k-480.mp4,stream=audio,output=$3/audio.mp4 \
-#
+
 packager --segment_duration 2 \
 in=$2/out-$1-250k-480.mp4,stream=video,output=$3/h264_480p.mp4 \
 in=$2/out-$1-1M-720.mp4,stream=video,output=$3/h264_720.mp4 \
