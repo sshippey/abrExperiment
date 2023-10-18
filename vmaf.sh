@@ -15,5 +15,5 @@ echo "Usage: ./vmaf.sh <reference file> <distorted file> <reference resolution>"
             [distorted][reference]ssim=stats_file=$2.ssim; \
             [0:v]setpts=PTS-STARTPTS[reference]; \
             [1:v]scale=$3:flags=bicubic,setpts=PTS-STARTPTS[distorted]; \
-            [distorted][reference]psnr=stats_file=$2.ssim" \
+            [distorted][reference]psnr=stats_file=$2.psnr" \
     -f null -
