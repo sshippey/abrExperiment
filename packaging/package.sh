@@ -13,4 +13,4 @@ in=$1-profile7.mp4,stream=video,output=$1-profile7.mp4 \
 in=$1-profile8.mp4,stream=video,output=$1-profile8.mp4 \
 in=$1-profile9.mp4,stream=video,output=$1-profile9.mp4 \
 in=$1-profile0.mp4,stream=video,output=$1-profile0.mp4 \
---mpd_output $1-h264.mpd
+--mpd_output h264.mpd

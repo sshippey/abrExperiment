@@ -15,11 +15,11 @@
     </style>
 
     <script class="code">
-        var video_name = 'academic-2s';
+        var video_name = 'academic-new';
         var video,
             player,
-            // url = "http://localhost:8080/" + video_name +  "/h264.mpd";
-            url = "http://192.168.1.118:8080/" + video_name +  "/h264.mpd";
+            url = "http://localhost:8080/" + video_name +  "/h264.mpd";
+            // url = "http://192.168.1.118:8080/" + video_name +  "/h264.mpd";
 
         function setVideo() {
           url = document.getElementById("videoUrl").value
@@ -64,13 +64,22 @@
             });
 
             player.setAutoPlay(false);
+            player.extend("SegmentResponseModifier", function () {
+            return {
+                modifyResponseAsync: function (chunk) {
+                    console.log(chunk.mediaInfo.bitrateList.find((e) => e.id == chunk.representationId))
+                    chunk.customAttribute = 'customAttribute';
+                    return Promise.resolve(chunk)
+                }
+            };
+            });
 
             var data = {
                 bitrateHistory: [],
                 bufferLevelHistory: [],
                 resolutionHistory: []
             };
-            
+
             var sent = false;
 
             video.addEventListener('ended', function() {
