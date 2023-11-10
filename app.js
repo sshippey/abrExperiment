@@ -8,6 +8,13 @@ const express_handlebars = require('express-handlebars');
 const app = express();
 const port = 3000
 
+// Change to your server
+var VIDEO_SERVER = 'localhost:8000';
+
+if (process.argv.length > 2) {
+  VIDEO_SERVER = process.argv[2];
+}
+
 app.set('view engine', 'handlebars');
 app.engine('handlebars', express_handlebars.engine());
 app.engine('handlebars', express_handlebars.engine({ defaultLayout: false }));
@@ -52,10 +59,10 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/:video/:strategy', (req, res) => {
-  const { video, strategy } = req.params;
-  console.log(video, strategy);
-  res.render('index', { video, strategy });
+app.get('/:video/:strategy/:mobility/:los', (req, res) => {
+  const { video, strategy, mobility, los } = req.params;
+  console.log(video, strategy, mobility, los);
+  res.render('index', { VIDEO_SERVER, video, strategy, mobility, los });
 });
 
 app.listen(port, '0.0.0.0', () => {

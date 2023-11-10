@@ -15,13 +15,11 @@
     </style>
 
     <script class="code">
-        // var video_name = 'academic';
-        // var video_name = 'runner';
         var video_name = {{{video}}}
         var video,
             player,
-            //url = "http://localhost:8080/" + video_name +  "/h264.mpd";
-            url = "http://192.168.1.119:8080/" + video_name +  "/h264.mpd";
+            // Your server here
+            url = {{{video_server}}} + video_name +  "/h264.mpd";
 
         function setVideo() {
           url = document.getElementById("videoUrl").value
@@ -46,11 +44,9 @@
         }
 
         var data = {
-            // bitrateHistory: [],
             durationHistory: [],
             profileHistory: [],
             bufferLevelHistory: [],
-            // resolutionHistory: []
         };
 
         // abrBola, abrDynamic, abrL2A, abrThroughput, abrLoLP 
@@ -62,7 +58,6 @@
                 streaming: {
                     abr: {
                         useDefaultABRRules: false,
-                        // ABRStrategy: 'abrLoLP',
                         ABRStrategy: {{{strategy}}},
                         additionalAbrRules: {
                             insufficientBufferRule: true,
@@ -74,7 +69,7 @@
                 }
             });
 
-            player.setAutoPlay(false);
+            player.setAutoPlay(true);
             player.extend("SegmentResponseModifier", function () {
             return {
                 modifyResponseAsync: function (chunk) {
@@ -96,12 +91,10 @@
 
             video.addEventListener('ended', function() {
               console.log('Video has finished playing');
-              // console.log(data.bitrateHistory.length);
-              var mob = document.getElementById("mobilityCheck").checked;
-              var los = document.getElementById("losCheck").checked;
+              var mob = {{{mobility}}};
+              var los = {{{los}}};
               console.log(mob, los)
 
-              // Prepare data
               fetch("stats", {
                 method: "POST",
                 body: JSON.stringify({  "history": data, 
@@ -135,34 +128,7 @@
                   var frameRate = currentRep.frameRate;
                   var resolution = currentRep.width + 'x' + currentRep.height;
 
-                  // data.bitrateHistory.push(bitrate);
                   data.bufferLevelHistory.push(bufferLevel);
-                  // data.resolutionHistory.push(resolution);
-
-                  /*
-                  if (sent == false && player.getActiveStream().getHasFinishedBuffering()) {
-                    sent = true;
-
-                    var mob = document.getElementById("mobilityCheck").checked;
-                    var los = document.getElementById("losCheck").checked;
-                    console.log(mob, los)
-
-                    // Prepare data
-                    fetch("stats", {
-                      method: "POST",
-                      body: JSON.stringify({  "history": data, 
-                                              "abr": player.getSettings().streaming.abr.ABRStrategy, 
-                                              "mobility": mob, 
-                                              "los": los,
-                                              "video": video_name
-                                              }),
-                      headers: {
-                        "Content-type": "application/json; charset=UTF-8"
-                      }
-                    }).then((response) => console.log(response));
-                  }
-                  */
-               }
             }, 100);
 
             player.initialize(video, url, true);
@@ -179,26 +145,9 @@
       <div class="row">
         <div class="col-md-4">
         </div>
-        <div> Video URL
-          <input name="Video URL" type="text" maxlength="512" id="videoUrl" class="searchField"/>
-          <button onclick="setVideo()">Set</button>
-        </div>
-        <div> ABR Strategy
-          <input name="ABR Strategy" type="text" maxlength="512" id="ABRStrategy" class="searchField"/>
-          <button onclick="setABR()">Set</button>
-        </div>
         <div class="col-md-8">
           <video controls="true"></video>
         </div>
-      </div>
-
-      <div> Possible abr strategies: abrBola, abrDynamic, abrL2A, abrThroughput, abrLoLP </div>
-
-      <div> Mobile?
-        <input name="mobility" type="checkbox" id="mobilityCheck"/>
-      </div>
-      <div> Line of sight to router?
-        <input name="los" type="checkbox" id="losCheck"/>
       </div>
 
       <div class="row">
