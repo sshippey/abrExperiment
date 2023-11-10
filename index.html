@@ -15,11 +15,12 @@
     </style>
 
     <script class="code">
-        var video_name = 'academic-new';
+        // var video_name = 'academic';
+        var video_name = 'runner';
         var video,
             player,
-            url = "http://localhost:8080/" + video_name +  "/h264.mpd";
-            // url = "http://192.168.1.118:8080/" + video_name +  "/h264.mpd";
+            //url = "http://localhost:8080/" + video_name +  "/h264.mpd";
+            url = "http://192.168.1.119:8080/" + video_name +  "/h264.mpd";
 
         function setVideo() {
           url = document.getElementById("videoUrl").value
@@ -43,6 +44,14 @@
             });
         }
 
+        var data = {
+            // bitrateHistory: [],
+            durationHistory: [],
+            profileHistory: [],
+            bufferLevelHistory: [],
+            // resolutionHistory: []
+        };
+
         // abrBola, abrDynamic, abrL2A, abrThroughput, abrLoLP 
         function init() {
             video = document.querySelector("video");
@@ -52,7 +61,7 @@
                 streaming: {
                     abr: {
                         useDefaultABRRules: true,
-                        ABRStrategy: 'abrThroughput',
+                        ABRStrategy: 'abrLoLP',
                         additionalAbrRules: {
                             insufficientBufferRule: true,
                             switchHistoryRule: false,
@@ -67,24 +76,25 @@
             player.extend("SegmentResponseModifier", function () {
             return {
                 modifyResponseAsync: function (chunk) {
-                    console.log(chunk.mediaInfo.bitrateList.find((e) => e.id == chunk.representationId))
+                    if (chunk.segmentType == 'MediaSegment') {
+                      console.log(chunk)
+                      console.log(chunk.duration)
+                      data.durationHistory.push(chunk.duration)
+                      console.log(chunk.mediaInfo.bitrateList.find((e) => e.id == chunk.representationId))
+                      data.profileHistory.push(chunk.mediaInfo.bitrateList.find((e) => e.id == chunk.representationId))
+                    }
                     chunk.customAttribute = 'customAttribute';
                     return Promise.resolve(chunk)
                 }
             };
             });
 
-            var data = {
-                bitrateHistory: [],
-                bufferLevelHistory: [],
-                resolutionHistory: []
-            };
 
             var sent = false;
 
             video.addEventListener('ended', function() {
               console.log('Video has finished playing');
-              console.log(data.bitrateHistory.length);
+              // console.log(data.bitrateHistory.length);
               var mob = document.getElementById("mobilityCheck").checked;
               var los = document.getElementById("losCheck").checked;
               console.log(mob, los)
@@ -123,9 +133,9 @@
                   var frameRate = currentRep.frameRate;
                   var resolution = currentRep.width + 'x' + currentRep.height;
 
-                  data.bitrateHistory.push(bitrate);
+                  // data.bitrateHistory.push(bitrate);
                   data.bufferLevelHistory.push(bufferLevel);
-                  data.resolutionHistory.push(resolution);
+                  // data.resolutionHistory.push(resolution);
 
                   /*
                   if (sent == false && player.getActiveStream().getHasFinishedBuffering()) {
