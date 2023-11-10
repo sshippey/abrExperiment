@@ -15,12 +15,14 @@
     </style>
 
     <script class="code">
-        var video_name = {{{video}}}
+        var video_name = '{{video}}';
         var video,
             player,
             // Your server here
-            url = {{{video_server}}} + video_name +  "/h264.mpd";
+            url = 'http://{{video_server}}/' + video_name +  "/h264.mpd";
 
+        console.log(url);
+        console.log(video_name);
         function setVideo() {
           url = document.getElementById("videoUrl").value
           player.initialize(video, url, true);
@@ -58,7 +60,7 @@
                 streaming: {
                     abr: {
                         useDefaultABRRules: false,
-                        ABRStrategy: {{{strategy}}},
+                        ABRStrategy: '{{strategy}}',
                         additionalAbrRules: {
                             insufficientBufferRule: true,
                             switchHistoryRule: false,
@@ -91,8 +93,8 @@
 
             video.addEventListener('ended', function() {
               console.log('Video has finished playing');
-              var mob = {{{mobility}}};
-              var los = {{{los}}};
+              var mob = {{mobility}};
+              var los = {{los}};
               console.log(mob, los)
 
               fetch("stats", {
@@ -129,7 +131,8 @@
                   var resolution = currentRep.width + 'x' + currentRep.height;
 
                   data.bufferLevelHistory.push(bufferLevel);
-            }, 100);
+                }
+              }, 100);
 
             player.initialize(video, url, true);
         }
