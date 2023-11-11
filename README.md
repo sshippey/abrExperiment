@@ -1,13 +1,12 @@
 # A Framework for Testing ABR Algorithms End to End over Real Hardware
 
-## Configuration
-
 ## Setup
 Dependencies: `node`, `npm`, an HTTP server (e.g. [node http-sever](https://www.npmjs.com/package/http-server)).
 
 Node dependencies: `express`, `express-handlebars`, `moment`, `fs`
 
 ```
+$ mkdir stats
 $ npm i
 ```
 

@@ -93,8 +93,8 @@
 
             video.addEventListener('ended', function() {
               console.log('Video has finished playing');
-              var mob = {{mobility}};
-              var los = {{los}};
+              var mob = '{{mobility}}';
+              var los = '{{los}}';
               console.log(mob, los)
 
               fetch("stats", {
