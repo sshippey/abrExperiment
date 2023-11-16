@@ -61,9 +61,14 @@ app.get('/', (req, res) => {
 
 app.get('/:video/:strategy/:mobility/:los', (req, res) => {
   const { video, strategy, mobility, los } = req.params;
-  console.log(video, strategy, mobility, los);
-  media_server = req.query.strategy;
-  res.render('index', { media_server, video, strategy, mobility, los });
+  if (req.query.server) {
+    media_server = req.query.server;
+  }
+  else {
+    media_server = VIDEO_SERVER;
+  }
+  console.log(media_server, video, strategy, mobility, los);
+  res.render('index', { 'video_server': media_server, video, strategy, mobility, los });
 });
 
 app.listen(port, '0.0.0.0', () => {
