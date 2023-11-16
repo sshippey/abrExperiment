@@ -96,7 +96,7 @@
               var los = '{{los}}';
               console.log(mob, los)
 
-              fetch("stats", {
+              fetch("/stats", {
                 method: "POST",
                 body: JSON.stringify({  "history": data, 
                                         "abr": player.getSettings().streaming.abr.ABRStrategy, 
